@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewData["Title"] = "Reporte Calendario";
+}
+
+<partial name="_SubMenu" Model="SubMenuTransacciones.Calendario" />
+
+<div id="calendario"> </div>
+
+
+IMPLEMENTAMOS MODAL CON BOTTSTRAP
+
+
+
+
+
+
+@section Scripts{
+    <script src="~/lib/fullcalendar/main.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function()
+        {
+            const calendarioEl = document.getElementById('calendario');
+            const calendario = new FullCalendar.Calendar(calendarioEl, {
+                dayMaxEventRows: 3, //TAMAÑO DE LAS CELDAS DEL CALENDARIO
+                initiaView: 'dayGridMonth', //ESTABLECEMOS VISTA INICIAL, PRIMER IMPACTO
+                 events: '/transacciones/ObtenerTransaccionesCalendario', //LLAMAMOS A TODO DE DB A CALENDAR            
+            //PULLUP EN CALENDARIO CON CLICK
+            dateClic: async function(info){
+                await buscarTransaccionesPorFecha(info.dateStr); //SALE DATA POR FECHA CLICKEADA POR USUARIO
+            }
+            
+            });
+
+            calendario.render();
+        });
+
+        async function buscarTransaccionesPorFecha(fecha){
+            const response = await fetch(`/transacciones/ObtenerTransaccionesPorFecha?fecha=${fecha}`,{
+                method: 'GET', 
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const json = await responde.json();
+            console.log(json);
+        }
+
+    </script>
+}

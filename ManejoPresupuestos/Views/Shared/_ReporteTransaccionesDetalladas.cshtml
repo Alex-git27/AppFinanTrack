@@ -1,0 +1,68 @@
+﻿@model ReporteTransaccionesDetalladas
+
+@{
+    var resumenMontos = new ResumenMontosViewModels()
+    {
+        Ingresos = Model.BalanceDepositos,
+        Gastos = Model.BalanceRetiros,
+        Total = Model.Total
+    };
+}
+
+<partial name = "_NavegarPorMeses" model = "@Model.FechaInicio"/>
+<partial name="_ResumenMontos" model="@resumenMontos" />
+
+
+@if (Model.TransaccionesAgrupadas.Count() == 0)
+{
+    <h5>No hay datos para mostrar</h5>
+    //MENSAJE EN CASO DE QUE NO SE ENCUENTREN TRASACCIONES EN EL MES
+}
+else
+{
+    <table class="table">
+        <tbody>
+            @foreach (var transaccionAgrupada in Model.TransaccionesAgrupadas)         //CREAMOS TABLA PARA RETORNAR CUENTAS EXISTENTES
+            {
+                <tr style="background-color: lightcyan; font-size: 26px">
+                    <td colspan="3">
+                        @transaccionAgrupada.FechaTransaccion.Day
+                        <span class="badge bg-secondary">@transaccionAgrupada.FechaTransaccion.ToString("ddd")</span>
+                    </td>
+
+                    <td class="activo">@transaccionAgrupada.BalanceDepositos.ToString("N")</td> @* //AGRUPAMOS CUENTAS POR VALOR, GASTO, INGRESO *@
+                    <td class="pasivo">@transaccionAgrupada.BalanceRetiros.ToString("N")</td>
+
+                </tr>
+
+                @foreach (var transaccion in transaccionAgrupada.Transacciones)//INICIALIZAMOS FOREACH PARA TRANSACCIONES
+
+                {
+                    <tr style="vertical-align:middle">
+                        <td>
+                            <a asp-controller="transacciones" asp-action="Editar" asp-route-id="@transaccion.Id" asp-route-UrlRetorno="@ViewBag.urlRetorno">
+                                <i class="bi-pencil"></i>
+                            </a>
+                        </td>
+
+                        <td>@transaccion.Categoria</td> @* //AGREGAMOS CELDAS *@
+                        <td>@transaccion.Cuenta</td>
+                        <td class="activo">
+                            @* SI TIPO OPERACION ES UN INGRESO VAMOS A MOSTRAR EL MONTO, SI NO LO ES "GASTO", NO MOSTRAMOS NADA *@
+                            @(transaccion.TipoOperacionId == TipoOperacion.Ingreso ? transaccion.Monto.ToString("N") : null)
+                        </td>
+
+
+
+                        <td class="pasivo">
+                            @* SI TIPO OPERACION ES UN GASTO VAMOS A MOSTRAR EL MONTO, SI NO LO ES "INGRESO", NO MOSTRAMOS NADA *@                                  
+                            @(transaccion.TipoOperacionId == TipoOperacion.Gasto ? transaccion.Monto.ToString("N") : null)
+                        </td>
+                    </tr>
+                }
+
+            }
+
+        </tbody>
+    </table>
+}

@@ -1,0 +1,17 @@
+﻿
+@model DateTime
+
+<h4>
+    @* CREAMOS EL TIPO DE CONTROL PARA HACER QUE EL USUARIO PUEDA NAVEGAR POR MES, ANTERIOR/POSTERIOR *@
+
+    @* VISTA ANTERIOR *@
+    <a asp-route-mes="@ViewBag.mesAnterior" asp-route-año="@ViewBag.añoAnterior" class="btn btn-secondary">
+        <i class="bi-chevron-left"></i> @*Importamos Icono de BootsTrap apuntado a la izquierda *@
+    </a>
+    @Model.ToString("MMM") - @Model.Year
+
+    @* MES POSTERIOR *@
+    <a asp-route-mes="@ViewBag.mesPosterior" asp-route-año="@ViewBag.añoPosterior" class="btn btn-secondary">
+        <i class="bi-chevron-right"></i> @*Importamos Icono de BootsTrap apuntado a la derecha *@
+    </a>
+</h4>
