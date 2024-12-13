@@ -30,11 +30,13 @@ namespace ManejoPresupuestos.Servicios
         {
             using var connection = new SqlConnection(connectionString);
             var id = await connection.QuerySingleAsync<int>
-                                                 ("TiposCuentas_Insertar",
-                                                 new {usuarioId = tipoCuenta.UsuarioId,
-                                                 nombre = tipoCuenta.Nombre},
-                                                 commandType: System.Data.CommandType.StoredProcedure);
-
+                                                ("TiposCuentas_Insertar",
+                                                new
+                                                {
+                                                    usuarioId = tipoCuenta.UsuarioId,
+                                                    nombre = tipoCuenta.Nombre
+                                                },
+                                                commandType: System.Data.CommandType.StoredProcedure);
             tipoCuenta.Id = id;
         }
 

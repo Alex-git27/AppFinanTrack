@@ -2,6 +2,7 @@
 using ClosedXML.Excel;
 using ManejoPresupuestos.Models;
 using ManejoPresupuestos.Servicios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.Design;
@@ -12,6 +13,8 @@ using System.Reflection;
 
 namespace ManejoPresupuestos.Controllers
 {
+    [Authorize] //SE OBTIENE VISTA QUE SE DEFINE EN PROGRAM PARA USUARIOS NO REGISTRADOS
+
     public class TransaccionesController: Controller
     {
         private readonly IServicioUsuarios servicioUsuarios;
@@ -35,6 +38,10 @@ namespace ManejoPresupuestos.Controllers
             this.servicioReportes = servicioReportes;
         }
 
+        //CONTROLAMOS ACCCIONES DE USUARIOS NO AUTENTICADOS
+
+        [Authorize]
+     
 
         //RETORNAMOS VISTA A INDEX
         public async Task<IActionResult> Index(int mes, int año) //AGREGAMOS PARAMETROS DE MES Y AÑO
@@ -309,10 +316,6 @@ namespace ManejoPresupuestos.Controllers
             return Json(transacciones);
 
         }
-
-
-
-
         public async Task<IActionResult> Crear()
         {
             var usuarioId = servicioUsuarios.ObtenerUsuarioId();
